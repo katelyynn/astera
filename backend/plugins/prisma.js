@@ -1,5 +1,6 @@
 import fp from "fastify-plugin";
 import pkg from "@prisma/client";
+import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const { PrismaClient } = pkg;
