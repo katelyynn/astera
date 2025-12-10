@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16
+    container_name: astera
     restart: always
     env_file: .env
     environment:
