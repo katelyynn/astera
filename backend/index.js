@@ -1,21 +1,31 @@
-import fastify from "fastify";
-import prisma_plugin from "./plugins/prisma.js";
-import argon2 from "argon2";
+import fastify from 'fastify';
+import prisma_plugin from './plugins/prisma.js';
+import argon2 from 'argon2';
 
 const astera = fastify();
 astera.register(prisma_plugin);
 
-astera.get("/health", async () => {
+astera.setErrorHandler((error, req, reply) => {
+  console.error(error);
+
+  reply.status(error.statusCode || 500).send({
+    statusCode: error.statusCode || 500,
+    error: error.name || 'interal server error',
+    message: error.message || 'something went wrong.. :c'
+  });
+});
+
+astera.get('/health', async () => {
   return { ok: true };
 });
 
-astera.get("/users", async () => {
+astera.get('/users', async () => {
   const users = await astera.prisma.user.findMany();
   return users;
 });
 
-astera.get("/register", async (req, reply) => {
-  const { username, email, password } = request.body();
+astera.get('/register', async (req, reply) => {
+  const { username, email, password } = req.body();
 
   if (!username || !email || !password) {
     return reply.status(400).send({
@@ -55,7 +65,74 @@ astera.get("/register", async (req, reply) => {
   };
 });
 
-astera.get("/user/:id", async (req, reply) => {
+astera.get('/login', async (req, reply) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return reply.status(400).send({
+      error: 'email and password is required to login'
+    });
+  }
+
+  const user = await astera.prisma.user.findUnique({
+    where: { email }
+  });
+
+  if (!user) {
+    return reply.status(401).send({
+      error: 'invalid credentials'
+    });
+  }
+
+  const valid = await argon2.verify(user.password, password);
+  if (!valid) {
+    return reply.status(401).send({
+      error: 'invalid credentials'
+    });
+  }
+
+  const token = jwt.sign(
+    { userId: user.id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  return {
+    token,
+    id: user.id,
+    username: user.username,
+    email: user.email
+  };
+});
+
+const auth = async (req, reply) => {
+  const head = req.headers.authorization;
+  if (!head) return reply.status(401).send({
+    error: 'missing token'
+  });
+
+  const token = head.split(' ')[1];
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = payload;
+  } catch {
+    return reply.status(401).send({
+      error: 'missing token'
+    });
+  }
+}
+
+astera.get('/me', { preHandler: auth }, async (req, reply) => {
+  const user = await astera.prisma.user.findUnique({ where: { id: req.user.userId } });
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    created_at: user.created_at
+  };
+});
+
+astera.get('/user/:id', async (req, reply) => {
   const { id } = req.params;
   const user = astera.prisma.user.findUnique({
     where: { id: Number(id) }
@@ -73,7 +150,7 @@ astera.get("/user/:id", async (req, reply) => {
   }
 });
 
-astera.get("/user/by-user/:username", async (req, reply) => {
+astera.get('/user/by-user/:username', async (req, reply) => {
   const { username } = req.params;
   const user = astera.prisma.user.findUnique({
     where: { username }
@@ -94,5 +171,5 @@ astera.get("/user/by-user/:username", async (req, reply) => {
 const port = 3001;
 astera.listen({ port }, err => {
   if (err) console.error(err);
-  else console.log("astera listening on port", port);
+  else console.log('astera listening on port', port);
 });
