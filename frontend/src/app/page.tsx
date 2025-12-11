@@ -25,6 +25,7 @@ export default async function Home() {
     <AsteraCard>
       <h1>home</h1>
       <p>welcome back, <strong>{me.username}</strong> ({me.email})</p>
+      <p>user id: {me.id}</p>
     </AsteraCard>
   );
 }
