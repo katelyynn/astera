@@ -10,3 +10,48 @@
   flex-direction: column;
   gap: 8px;
 }
+
+.content {
+  display: flex;
+  gap: 20px;
+  width: 940px;
+
+  position: relative;
+  z-index: 2;
+}
+
+.content_wash {
+  background: #EDEFF4;
+  border-bottom: 1px solid #D8DFEA;
+  height: 120px;
+
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  z-index: 1;
+
+  .inner {
+    width: 980px;
+    height: 100%;
+    margin: 0 auto;
+
+    padding-left: calc(200px + 20px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+  }
+}
+
+.content_left {
+  width: 200px;
+  margin-top: -60px;
+}
+
+.content_right {
+  width: 540px;
+  padding: 10px 0;
+}

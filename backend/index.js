@@ -151,8 +151,8 @@ astera.get('/me', { preHandler: auth }, async (req, reply) => {
 
 astera.get('/user/:id', async (req, reply) => {
   const { id } = req.params;
-  const user = astera.prisma.user.findUnique({
-    where: { id: Number(id) }
+  const user = await astera.prisma.user.findFirst({
+    where: { id }
   });
 
   if (!user) return reply.status(404).send({
@@ -169,13 +169,15 @@ astera.get('/user/:id', async (req, reply) => {
 
 astera.get('/user/by-user/:username', async (req, reply) => {
   const { username } = req.params;
-  const user = astera.prisma.user.findUnique({
+  const user = await astera.prisma.user.findFirst({
     where: { username }
   });
 
-  if (!user) return reply.status(404).send({
-    error: 'no user with such username exists'
-  });
+  if (!user) {
+    return reply.status(404).send({
+      error: 'no user with such username exists'
+    });
+  }
 
   return {
     id: user.id,
