@@ -49,6 +49,10 @@
 .content_left {
   width: 200px;
   margin-top: -60px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .content_right {

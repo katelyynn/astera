@@ -9,6 +9,7 @@ const astera = fastify();
 
 await astera.register(cors, {
   origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   credentials: true
 });
 
@@ -145,7 +146,7 @@ astera.get('/me', { preHandler: auth }, async (req, reply) => {
     id: user.id,
     username: user.username,
     email: user.email,
-    created_at: user.created_at
+    joined: user.joined
   };
 });
 
@@ -162,8 +163,8 @@ astera.get('/user/:id', async (req, reply) => {
   return {
     id: user.id,
     username: user.username,
-    email: user.email,
-    created_at: user.created_at
+    joined: user.joined,
+    about: user.about
   }
 });
 
@@ -182,8 +183,60 @@ astera.get('/user/by-user/:username', async (req, reply) => {
   return {
     id: user.id,
     username: user.username,
-    email: user.email,
-    created_at: user.created_at
+    joined: user.joined,
+    about: user.about
+  }
+});
+
+astera.get('/settings', { preHandler: auth }, async (req, reply) => {
+  const user = await astera.prisma.user.findFirst({
+    where: { id: req.user.userId },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      about: true
+    }
+  });
+
+  if (!user) {
+    return reply.status(404).send({
+      error: 'user not found'
+    });
+  }
+
+  return user;
+});
+
+astera.patch('/settings', { preHandler: auth }, async (req, reply) => {
+  const { username, email, password, about } = req.body;
+
+  const data = {};
+
+  if (username) data.username = username;
+  if (email) data.email = email;
+  if (about) data.about = about;
+
+  if (password) {
+    const hashed = await argon2.hash(password, {
+      type: argon2.argon2id
+    });
+    data.password = hashed;
+  }
+
+  try {
+    const updated = await astera.prisma.user.update({
+      where: { id: req.user.userId },
+      data
+    });
+
+    return {
+      id: updated.id
+    }
+  } catch (e) {
+    return reply.status(400).send({
+      error: 'email or username already in use'
+    });
   }
 });
 

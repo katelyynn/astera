@@ -17,5 +17,6 @@ model user {
   username   String
   email      String   @unique
   password   String
-  created_at DateTime @default(now())
+  about      String?
+  joined     DateTime @default(now())
 }

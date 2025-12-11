@@ -1,12 +1,16 @@
+import { AsteraAbout } from "@/app/_components/about/about";
 import { AsteraAlert } from "@/app/_components/alert/alert";
 import { AsteraAvatar } from "@/app/_components/avatar/avatar";
 import { AsteraCard, AsteraContent, AsteraContentLeft, AsteraContentRight, AsteraContentWash } from "@/app/_components/card/card";
+import { AsteraInfoBox, AsteraInfoBoxList, AsteraSummary, AsteraSummaryList } from "@/app/_components/infobox/infobox";
+import { AsteraTime } from "@/app/_components/time/time";
 
-interface User {
+export interface User {
   id: string,
   username: string,
   email: string,
-  created_at: string
+  joined: string,
+  about: string
 }
 
 export default async function Profile({ params }: { params: { username: string } }) {
@@ -30,10 +34,22 @@ export default async function Profile({ params }: { params: { username: string }
       <AsteraContent>
         <AsteraContentLeft>
           <AsteraAvatar size="big" />
+          <AsteraAbout value={user.about || `seems ${user.username} is staying mysterious for now`} />
+          <AsteraInfoBoxList>
+            <AsteraInfoBox label="information">
+              <AsteraSummaryList>
+                <AsteraSummary label="joined"><AsteraTime time={user.joined} /></AsteraSummary>
+                <AsteraSummary label="goes by">she/her</AsteraSummary>
+                <AsteraSummary label="plays">156,438</AsteraSummary>
+              </AsteraSummaryList>
+            </AsteraInfoBox>
+            <AsteraInfoBox label="friends">
+              <AsteraSummary label="total">54</AsteraSummary>
+            </AsteraInfoBox>
+          </AsteraInfoBoxList>
         </AsteraContentLeft>
         <AsteraContentRight>
-          <p>email: {user.email}</p>
-          <p>joined: {user.created_at}</p>
+
         </AsteraContentRight>
       </AsteraContent>
     </>

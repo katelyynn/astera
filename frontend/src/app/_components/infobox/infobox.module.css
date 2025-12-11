@@ -1,0 +1,39 @@
+.infobox {
+  border-top: 1px solid #94a3c4;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  background: #eceff5;
+  padding: 5px 8px;
+  color: #333;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.content {
+  padding: 10px 8px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+
+  & > dt {
+    color: #777;
+  }
+}
+
+.summary_list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
