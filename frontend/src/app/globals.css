@@ -59,7 +59,7 @@ table {
   --font-size: 12px;
   --line-height: auto;
 
-  --hue: 222; /* 222 */
+  --hue: 333; /* 222 */
 }
 
 body {
@@ -80,7 +80,6 @@ a {
 main {
   width: 980px;
   margin: 0 auto;
-  padding-top: 100px;
 }
 
 form {
@@ -99,6 +98,9 @@ h1 {
 strong {
   font-weight: bold;
 }
+em {
+  font-style: italic;
+}
 
 h3 {
   font-size: 10px;
@@ -106,4 +108,18 @@ h3 {
   font-weight: bold;
   margin-bottom: 5px;
   cursor: default;
+}
+
+
+.md {
+  p {
+    margin: 5px 0;
+  }
+
+  & > :first-child {
+    margin-top: unset;
+  }
+  & > :last-child {
+    margin-bottom: unset;
+  }
 }

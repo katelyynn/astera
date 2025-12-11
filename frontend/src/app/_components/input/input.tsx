@@ -6,9 +6,10 @@ interface AsteraInputProps {
   placeholder?: string | undefined,
   type?: string | undefined,
   value?: string | undefined,
-  on_change?: (e: React.ChangeEvent<HTMLInputElement>) => void | undefined,
+  on_change?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void | undefined,
   required?: boolean,
-  textarea?: boolean
+  textarea?: boolean,
+  cols?: number | undefined
 }
 
 export function AsteraInput({
@@ -18,7 +19,8 @@ export function AsteraInput({
   value,
   on_change,
   required = false,
-  textarea = false
+  textarea = false,
+  cols
 }: AsteraInputProps) {
   if (value == null) value = undefined;
 
@@ -26,7 +28,7 @@ export function AsteraInput({
     return (
       <div className={styles.container}>
         {label && <p className={styles.label}>{label}:</p>}
-        <textarea className={styles.textarea} placeholder={placeholder} value={value} onChange={on_change} required={required} />
+        <textarea className={styles.textarea} placeholder={placeholder} value={value} onChange={on_change} required={required} cols={cols} />
       </div>
     )
   }

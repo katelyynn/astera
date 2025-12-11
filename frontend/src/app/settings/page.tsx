@@ -2,12 +2,13 @@
 
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AsteraCard, AsteraContent, AsteraContentLeft, AsteraContentRight, AsteraContentWash } from "../_components/card/card";
+import { AsteraCard, AsteraContent, AsteraContentInner, AsteraContentLeft, AsteraContentRight, AsteraContentWash } from "../_components/card/card";
 import { AsteraInput, AsteraInputBlock } from "../_components/input/input";
 import { AsteraAlert } from "../_components/alert/alert";
 import { AsteraButon } from "../_components/buton/buton";
 
 interface User {
+  avatar: string,
   username: string,
   email: string,
   about: string;
@@ -15,6 +16,7 @@ interface User {
 
 export default function Settings() {
   const [user, set_user] = useState({});
+  const [avatar, set_avatar] = useState('');
   const [username, set_username] = useState('');
   const [email, set_email] = useState('');
   const [password, set_password] = useState('');
@@ -32,12 +34,12 @@ export default function Settings() {
 
       if (!res.ok) {
         redirect('/login');
-        return;
       }
 
       const data = await res.json();
 
       set_user(data);
+      set_avatar(data.avatar);
       set_username(data.username);
       set_email(data.email);
       set_about(data.about);
@@ -77,19 +79,26 @@ export default function Settings() {
 
         </AsteraContentLeft>
         <AsteraContentRight>
-          <form onSubmit={handle_submit}>
-            <AsteraInput label="username" type="username" value={username} on_change={(e) => set_username(e.target.value)} />
-            <AsteraInput label="email" type="email" value={email} on_change={(e) => set_email(e.target.value)} />
-            <AsteraInput label="password" type="password" value={password} on_change={(e) => set_password(e.target.value)} />
-            <AsteraInput label="about" textarea value={about} on_change={(e) => set_about(e.target.value)} />
-            <AsteraInputBlock>
-              <AsteraButon type="submit">
-                save
-              </AsteraButon>
-            </AsteraInputBlock>
-          </form>
-          {error && <AsteraAlert label={error} type="error" />}
-          {success && <AsteraAlert label={success} type="success" />}
+          <AsteraContentInner>
+            <h3>profile</h3>
+            <form onSubmit={handle_submit}>
+              <AsteraInput label="avatar" type="avatar" value={avatar} on_change={(e) => set_avatar(e.target.value)} />
+              <AsteraInput label="username" type="username" value={username} on_change={(e) => set_username(e.target.value)} />
+              <AsteraInput label="email" type="email" value={email} on_change={(e) => set_email(e.target.value)} />
+              <AsteraInput label="password" type="password" value={password} on_change={(e) => set_password(e.target.value)} />
+              <AsteraInput label="about" textarea value={about} on_change={(e) => set_about(e.target.value)} />
+              <AsteraInputBlock>
+                <AsteraButon type="submit">
+                  save
+                </AsteraButon>
+              </AsteraInputBlock>
+            </form>
+            {error && <AsteraAlert label={error} type="error" />}
+            {success && <AsteraAlert label={success} type="success" />}
+          </AsteraContentInner>
+          <AsteraContentInner>
+            <h3>something</h3>
+          </AsteraContentInner>
         </AsteraContentRight>
       </AsteraContent>
     </>

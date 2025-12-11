@@ -1,3 +1,4 @@
+import remarkGfm from 'remark-gfm';
 import styles from './about.module.css';
 import ReactMarkdown from 'react-markdown';
 
@@ -7,8 +8,8 @@ interface AsteraAboutProps {
 
 export function AsteraAbout({ value } : AsteraAboutProps) {
   return (
-    <div className={styles.about}>
-      <ReactMarkdown>{value}</ReactMarkdown>
+    <div className={`${styles.about} md`}>
+      <ReactMarkdown rehypePlugins={[remarkGfm]}>{value}</ReactMarkdown>
     </div>
   )
 }

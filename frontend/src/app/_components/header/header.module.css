@@ -1,0 +1,50 @@
+.header {
+  background: hsl(var(--hue), 38%, 48%);
+  border: 1px solid hsl(var(--hue), 57%, 34%);
+  border-top: none;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+
+  margin: 0 -12px calc(-1 * var(--height));
+  padding: 0 12px;
+  --height: 40px;
+
+  height: var(--height);
+
+  position: relative;
+  z-index: 10;
+
+  font-size: 11px;
+  line-height: 14px;
+
+  display: flex;
+  align-items: center;
+
+  color: white;
+}
+
+.logo {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.item {
+  color: #eee;
+}
+
+.sep {
+  font-size: 6px;
+  position: relative;
+  top: 0.5px;
+  margin: 0 4px;
+  opacity: 0.6;
+  pointer-events: none;
+}

@@ -17,8 +17,18 @@
 .textarea,
 .input {
   width: 210px;
-  border: 1px solid #bdc7d8;
+  border: 1px solid hsl(var(--hue), 26%, 79%);
   font-family: var(--font);
   font-size: 11px;
   padding: 3px;
+  outline: none !important;
+
+  &:focus-visible {
+    background: hsl(var(--hue), 50%, 98%);
+  }
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
 }
