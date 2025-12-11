@@ -48,3 +48,11 @@ export function AsteraContentRight({ children }: { children: React.ReactNode }) 
     </section>
   )
 }
+
+export function AsteraContentInner({ children }: { children: React.ReactNode }) {
+  return (
+    <section className={styles.content_inner}>
+      {children}
+    </section>
+  )
+}

@@ -1,7 +1,7 @@
 import { AsteraAbout } from "@/app/_components/about/about";
 import { AsteraAlert } from "@/app/_components/alert/alert";
 import { AsteraAvatar } from "@/app/_components/avatar/avatar";
-import { AsteraCard, AsteraContent, AsteraContentLeft, AsteraContentRight, AsteraContentWash } from "@/app/_components/card/card";
+import { AsteraCard, AsteraContent, AsteraContentInner, AsteraContentLeft, AsteraContentRight, AsteraContentWash } from "@/app/_components/card/card";
 import { AsteraInfoBox, AsteraInfoBoxList, AsteraSummary, AsteraSummaryList } from "@/app/_components/infobox/infobox";
 import { AsteraTime } from "@/app/_components/time/time";
 
@@ -46,10 +46,26 @@ export default async function Profile({ params }: { params: { username: string }
             <AsteraInfoBox label="friends">
               <AsteraSummary label="total">54</AsteraSummary>
             </AsteraInfoBox>
+            <AsteraInfoBox label="linked">
+              <AsteraSummary label="website">
+                <a href="https://katelyn.moe" target="_blank">katelyn.moe</a>
+              </AsteraSummary>
+            </AsteraInfoBox>
           </AsteraInfoBoxList>
         </AsteraContentLeft>
         <AsteraContentRight>
-
+          <AsteraContentInner>
+            <h3>Recent Activity</h3>
+          </AsteraContentInner>
+          <AsteraContentInner>
+            <h3>Recent Tracks</h3>
+          </AsteraContentInner>
+          <AsteraContentInner>
+            <h3>{user.username}&rsquo;s Library</h3>
+          </AsteraContentInner>
+          <AsteraContentInner>
+            <h3>Comments</h3>
+          </AsteraContentInner>
         </AsteraContentRight>
       </AsteraContent>
     </>

@@ -1,11 +1,11 @@
 .infobox {
-  border-top: 1px solid #94a3c4;
+  border-top: 1px solid hsl(var(--hue), 29%, 67%);
   display: flex;
   flex-direction: column;
 }
 
 .label {
-  background: #eceff5;
+  background: hsl(var(--hue), 31%, 94%);
   padding: 5px 8px;
   color: #333;
   font-weight: bold;
@@ -26,6 +26,7 @@
   flex-direction: column;
   gap: 2px;
   font-size: 11px;
+  cursor: default;
 
   & > dt {
     color: #777;

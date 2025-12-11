@@ -21,8 +21,8 @@
 }
 
 .content_wash {
-  background: #EDEFF4;
-  border-bottom: 1px solid #D8DFEA;
+  background: hsl(var(--hue), 24%, 94%);
+  border-bottom: 1px solid hsl(var(--hue), 30%, 88%);
   height: 120px;
 
   width: 100vw;
@@ -57,5 +57,19 @@
 
 .content_right {
   width: 540px;
-  padding: 10px 0;
+  padding: 20px 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.content_inner {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+
+  &:first-child {
+    border-top: none;
+    padding-top: unset;
+  }
 }

@@ -1,3 +1,4 @@
+import { AsteraTooltip } from '../tooltip/tooltip';
 import styles from './time.module.css';
 import { DateTime } from 'luxon';
 
@@ -9,6 +10,8 @@ export function AsteraTime({ time }: AsteraTimeProps) {
   const date = DateTime.fromISO(time).setZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
   return (
-    <span className={styles.time}>{date.toLocaleString(DateTime.DATE_HUGE)}</span>
-  )
+    <AsteraTooltip content={date.toLocaleString(DateTime.DATETIME_HUGE)}>
+      <span className={styles.time}>{date.toLocaleString(DateTime.DATE_HUGE)}</span>
+    </AsteraTooltip>
+  );
 }

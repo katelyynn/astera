@@ -1,5 +1,5 @@
 .about {
-  border: 1px solid #d8dfea;
+  border: 1px solid hsl(var(--hue), 30%, 88%);
   padding: 7px;
   font-size: 11px;
   color: #333;
