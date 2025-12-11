@@ -1,0 +1,24 @@
+.buton {
+  appearance: none;
+  background: linear-gradient(180deg, #F5F6F6, #DBDBDB);
+  border: 1px solid #999;
+  border-bottom-color: #888;
+  color: #333;
+  font-size: 11px;
+  line-height: normal;
+  font-weight: bold;
+  padding: 3px 6px;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .1);
+
+  width: fit-content;
+  cursor: pointer;
+
+  &:active {
+    background: #ddd;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .05);
+    border-bottom-color: #999;
+  }
+}

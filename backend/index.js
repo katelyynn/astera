@@ -1,8 +1,22 @@
 import fastify from 'fastify';
 import prisma_plugin from './plugins/prisma.js';
+import cors from '@fastify/cors';
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
+import cookie from '@fastify/cookie';
 
 const astera = fastify();
+
+await astera.register(cors, {
+  origin: 'http://localhost:3000',
+  credentials: true
+});
+
+astera.register(cookie, {
+  secret: process.env.COOKIE_SECRET || 'astera',
+  hook: 'onRequest'
+});
+
 astera.register(prisma_plugin);
 
 astera.setErrorHandler((error, req, reply) => {
@@ -24,8 +38,8 @@ astera.get('/users', async () => {
   return users;
 });
 
-astera.get('/register', async (req, reply) => {
-  const { username, email, password } = req.body();
+astera.post('/register', async (req, reply) => {
+  const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
     return reply.status(400).send({
@@ -49,7 +63,7 @@ astera.get('/register', async (req, reply) => {
     type: argon2.argon2id
   });
 
-  const user = await astera.prisma.create({
+  const user = await astera.prisma.user.create({
     data: {
       username,
       email,
@@ -58,14 +72,11 @@ astera.get('/register', async (req, reply) => {
   });
 
   return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    created_at: user.created_at
+    id: user.id
   };
 });
 
-astera.get('/login', async (req, reply) => {
+astera.post('/login', async (req, reply) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -97,21 +108,27 @@ astera.get('/login', async (req, reply) => {
     { expiresIn: '7d' }
   );
 
-  return {
-    token,
-    id: user.id,
-    username: user.username,
-    email: user.email
-  };
+  reply
+    .setCookie('token', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7
+    })
+    .send({
+      ok: true
+    });
 });
 
 const auth = async (req, reply) => {
-  const head = req.headers.authorization;
-  if (!head) return reply.status(401).send({
-    error: 'missing token'
-  });
+  const token = req.cookies?.token;
+  if (!token) {
+    return reply.status(401).send({
+      error: 'missing token'
+    });
+  }
 
-  const token = head.split(' ')[1];
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     req.user = payload;

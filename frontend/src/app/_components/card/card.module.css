@@ -1,0 +1,12 @@
+.card {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .05);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
