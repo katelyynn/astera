@@ -4,6 +4,8 @@ import cors from '@fastify/cors';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import cookie from '@fastify/cookie';
+import user_route from './routes/user.js';
+import { auth } from './lib/auth.js';
 
 const astera = fastify();
 
@@ -20,6 +22,8 @@ astera.register(cookie, {
 
 astera.register(prisma_plugin);
 
+astera.register(user_route);
+
 astera.setErrorHandler((error, req, reply) => {
   console.error(error);
 
@@ -32,11 +36,6 @@ astera.setErrorHandler((error, req, reply) => {
 
 astera.get('/health', async () => {
   return { ok: true };
-});
-
-astera.get('/users', async () => {
-  const users = await astera.prisma.user.findMany();
-  return users;
 });
 
 astera.post('/register', async (req, reply) => {
@@ -120,72 +119,6 @@ astera.post('/login', async (req, reply) => {
     .send({
       ok: true
     });
-});
-
-const auth = async (req, reply) => {
-  const token = req.cookies?.token;
-  if (!token) {
-    return reply.status(401).send({
-      error: 'missing token'
-    });
-  }
-
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = payload;
-  } catch {
-    return reply.status(401).send({
-      error: 'missing token'
-    });
-  }
-}
-
-astera.get('/me', { preHandler: auth }, async (req, reply) => {
-  const user = await astera.prisma.user.findUnique({ where: { id: req.user.userId } });
-  return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    joined: user.joined
-  };
-});
-
-astera.get('/user/:id', async (req, reply) => {
-  const { id } = req.params;
-  const user = await astera.prisma.user.findFirst({
-    where: { id }
-  });
-
-  if (!user) return reply.status(404).send({
-    error: 'no user with such id exists'
-  });
-
-  return {
-    id: user.id,
-    username: user.username,
-    joined: user.joined,
-    about: user.about
-  }
-});
-
-astera.get('/user/by-user/:username', async (req, reply) => {
-  const { username } = req.params;
-  const user = await astera.prisma.user.findFirst({
-    where: { username }
-  });
-
-  if (!user) {
-    return reply.status(404).send({
-      error: 'no user with such username exists'
-    });
-  }
-
-  return {
-    id: user.id,
-    username: user.username,
-    joined: user.joined,
-    about: user.about
-  }
 });
 
 astera.get('/settings', { preHandler: auth }, async (req, reply) => {

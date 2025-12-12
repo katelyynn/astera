@@ -19,4 +19,57 @@ model user {
   password   String
   about      String?
   joined     DateTime @default(now())
+
+  activities activity[]
+}
+
+model activity {
+  id         String   @id @default(cuid())
+  user_id    String
+  user       user     @relation(fields: [user_id], references: [id])
+  involved   String[]
+  context    Json?
+  type       String
+  created    DateTime @default(now())
+}
+
+model artist {
+  id         String   @id @default(cuid())
+  name       String
+  spotify_id String?  @unique
+  apple_id   String?  @unique
+  mb_id      String?  @unique
+  canonical  Boolean  @default(true)
+
+  albums     album[]
+  tracks     track[]
+}
+
+model album {
+  id         String   @id @default(cuid())
+  name       String
+  artist_id  String
+  spotify_id String?  @unique
+  apple_id   String?  @unique
+  mb_id      String?  @unique
+  canonical  Boolean  @default(true)
+  released   DateTime?
+
+  artist     artist   @relation(fields: [artist_id], references: [id])
+  tracks     track[]  @relation("album_tracks")
+}
+
+model track {
+  id         String   @id @default(cuid())
+  name       String
+  artist_id  String
+  spotify_id String?  @unique
+  apple_id   String?  @unique
+  mb_id      String?  @unique
+  canonical  Boolean  @default(true)
+  released   DateTime?
+  duration   Int?
+
+  artist     artist   @relation(fields: [artist_id], references: [id])
+  albums     album[]  @relation("album_tracks")
 }
