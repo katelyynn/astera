@@ -21,6 +21,7 @@ model user {
   joined     DateTime @default(now())
 
   activities activity[]
+  listens    listen[]
 }
 
 model activity {
@@ -41,28 +42,28 @@ model artist {
   mb_id      String?  @unique
   canonical  Boolean  @default(true)
 
-  albums     album[]
-  tracks     track[]
+  albums     artist_album[]
+  tracks     artist_track[]
 }
 
 model album {
   id         String   @id @default(cuid())
   name       String
-  artist_id  String
   spotify_id String?  @unique
   apple_id   String?  @unique
   mb_id      String?  @unique
   canonical  Boolean  @default(true)
   released   DateTime?
 
-  artist     artist   @relation(fields: [artist_id], references: [id])
-  tracks     track[]  @relation("album_tracks")
+  artists    artist_album[]
+  tracks     album_track[]
+
+  listens    listen[]
 }
 
 model track {
   id         String   @id @default(cuid())
   name       String
-  artist_id  String
   spotify_id String?  @unique
   apple_id   String?  @unique
   mb_id      String?  @unique
@@ -70,6 +71,58 @@ model track {
   released   DateTime?
   duration   Int?
 
-  artist     artist   @relation(fields: [artist_id], references: [id])
-  albums     album[]  @relation("album_tracks")
+  artists    artist_track[]
+  albums     album_track[]
+
+  listens    listen[]
+}
+
+model artist_track {
+  artist_id String
+  track_id  String
+
+  artist    artist @relation(fields: [artist_id], references: [id])
+  track     track  @relation(fields: [track_id], references: [id])
+
+  @@id([artist_id, track_id])
+}
+
+model artist_album {
+  artist_id String
+  album_id  String
+
+  artist    artist @relation(fields: [artist_id], references: [id])
+  album     album  @relation(fields: [album_id], references: [id])
+
+  @@id([artist_id, album_id])
+}
+
+model album_track {
+  album_id String
+  track_id String
+
+  album    album @relation(fields: [album_id], references: [id])
+  track    track @relation(fields: [track_id], references: [id])
+
+  @@id([album_id, track_id])
+}
+
+model listen {
+  id               String   @id @default(cuid())
+  user_id          String
+  user             user     @relation(fields: [user_id], references: [id])
+  track_id         String
+  track            track    @relation(fields: [track_id], references: [id])
+  album_id         String
+  album            album    @relation(fields: [album_id], references: [id])
+
+  raw_track        String?
+  raw_artist       String?
+  raw_album        String?
+  raw_album_artist String?
+
+  listened         DateTime
+  created          DateTime @default(now())
+
+  provisional      Boolean  @default(true)
 }

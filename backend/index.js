@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import cookie from '@fastify/cookie';
 import user_route from './routes/user.js';
 import { auth } from './lib/auth.js';
+import listen_route from './routes/listen.js';
 
 const astera = fastify();
 
@@ -23,6 +24,7 @@ astera.register(cookie, {
 astera.register(prisma_plugin);
 
 astera.register(user_route);
+astera.register(listen_route);
 
 astera.setErrorHandler((error, req, reply) => {
   console.error(error);
